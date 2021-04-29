@@ -54,7 +54,10 @@ type CheckResult = {
   gyuid: string
   processID: string
   operatorType: string
+  number: string
   msg: string
+  expireTime?: string
+  metadata?: string
 }
 
 type LoginResult = {

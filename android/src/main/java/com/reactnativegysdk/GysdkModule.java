@@ -78,8 +78,10 @@ public class GysdkModule extends ReactContextBaseJavaModule {
       public void onSuccess(GYResponse response) {
         AuthCheckMessage message = JSON.parseObject(response.getMsg(), AuthCheckMessage.class);
         result.putString("msg", message.getMsg());
+        result.putDouble("expireTime", message.getExpireTime());
         result.putString("operatorType", message.getOperatorType());
         result.putString("processID", message.getProcess_id());
+        result.putString("number", message.getNumber());
         result.putString("gyuid", response.getGyuid());
         result.putInt("code", response.getCode());
         result.putBoolean("success", true);
