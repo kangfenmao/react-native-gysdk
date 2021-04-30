@@ -175,7 +175,6 @@ public class GysdkModule extends ReactContextBaseJavaModule {
       .setPrivacyClauseText(null, null, clauseNameOne,  clauseUrlOne, clauseNameTwo, clauseUrlTwo)
       .setStatusBar(Color.WHITE, Color.WHITE, true)
       .setAuthNavLayout(Color.WHITE, 49, true, false)
-      .setNavReturnImgPath("gt_one_login_left_back")
       .setReturnImgOffsetX(Utils.getLeftX(backButtonRect, 12))
       .setReturnImgWidth(Utils.getWidth(backButtonRect, 24))
       .setReturnImgHeight(Utils.getHeight(backButtonRect, 24))
