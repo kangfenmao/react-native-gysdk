@@ -21,9 +21,11 @@ RCT_REMAP_METHOD(init,
 
         self->gyuid = gyUid;
 
-        isSuccess
-        ? resolve(@{@"success": @(isSuccess), @"code": @200, @"gyuid": gyUid, @"message": @"初始化成功"})
-        : resolve(@{@"success": @(isSuccess), @"code": @(error.code), @"gyuid": gyUid, @"message": error.localizedDescription});
+        NSDictionary *result = isSuccess
+        ? [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @200, @"code", gyUid, @"gyuid", @"初始化成功", @"message", nil]
+        : [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @(error.code), @"code", gyUid, @"gyuid", error.localizedDescription,@"message", nil];
+
+        resolve(result);
     }];
 }
 
