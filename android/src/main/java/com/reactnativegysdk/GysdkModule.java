@@ -25,6 +25,8 @@ import com.reactnativegysdk.model.AuthCheckMessage;
 import com.reactnativegysdk.model.AuthFailureMessage;
 import com.reactnativegysdk.model.AuthSuccessMessage;
 
+import org.json.JSONException;
+
 @ReactModule(name = GysdkModule.NAME)
 public class GysdkModule extends ReactContextBaseJavaModule {
   public static final String NAME = "Gysdk";
@@ -92,9 +94,11 @@ public class GysdkModule extends ReactContextBaseJavaModule {
       @Override
       public void onFailed(GYResponse response) {
         AuthFailureMessage message = JSON.parseObject(response.getMsg(), AuthFailureMessage.class);
+        String errorData = message.getMetadata().getString("error_data");
+        String errorMsg = message.getMetadata().getString("msg");
 
-        result.putString("metadata", JSON.toJSONString(message.getMetadata()));
-        result.putString("msg", message.getMetadata().getError_data());
+        result.putString("metadata", message.getMetadata().toString());
+        result.putString("msg", errorData != null ? errorData : errorMsg);
         result.putString("operatorType", message.getOperatorType());
         result.putString("processID", message.getProcess_id());
         result.putInt("errorCode", message.getErrorCode());
@@ -200,8 +204,11 @@ public class GysdkModule extends ReactContextBaseJavaModule {
       @Override
       public void onFailed(GYResponse response) {
         AuthFailureMessage message = JSON.parseObject(response.getMsg(), AuthFailureMessage.class);
-        result.putString("metadata", JSON.toJSONString(message.getMetadata()));
-        result.putString("msg", message.getMetadata().getError_data());
+        String errorData = message.getMetadata().getString("error_data");
+        String errorMsg = message.getMetadata().getString("msg");
+
+        result.putString("metadata", message.getMetadata().toString());
+        result.putString("msg", errorData != null ? errorData : errorMsg);
         result.putString("operatorType", message.getOperatorType());
         result.putString("processID", message.getProcess_id());
         result.putInt("errorCode", message.getErrorCode());

@@ -1,11 +1,13 @@
 package com.reactnativegysdk.model;
 
+import com.alibaba.fastjson.JSONObject;
+
 public class AuthFailureMessage {
   private String errorCode;
   private String process_id;
   private String operatorType;
   private String clienttype;
-  private AuthFailureMetadata metadata;
+  private JSONObject metadata;
 
   public int getErrorCode() {
     return Integer.valueOf(errorCode);
@@ -39,11 +41,11 @@ public class AuthFailureMessage {
     this.clienttype = clienttype;
   }
 
-  public AuthFailureMetadata getMetadata() {
+  public JSONObject getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(AuthFailureMetadata metadata) {
+  public void setMetadata(JSONObject metadata) {
     this.metadata = metadata;
   }
 }
