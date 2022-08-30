@@ -1,6 +1,6 @@
 {
-  "name": "react-native-gysdk",
-  "version": "0.1.0",
+  "name": "@kangfenmao/react-native-gysdk",
+  "version": "1.0.0",
   "description": "个验SDK React Native 版本",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,6 +25,7 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lintfix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
