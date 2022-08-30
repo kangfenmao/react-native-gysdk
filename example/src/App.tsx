@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Gysdk from 'react-native-gysdk'
+import Gysdk from '@kangfenmao/react-native-gysdk'
 import { Dimensions, Platform, StatusBar } from 'react-native'
 import { Button, StyleSheet, View } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'

@@ -6,7 +6,7 @@ public class AuthCheckMessage {
   private String operatorType;
   private int clienttype;
   private String number;
-  private Long expireTime;
+  private Long expiredTime;
 
   public String getMsg() {
     return msg;
@@ -48,11 +48,11 @@ public class AuthCheckMessage {
     this.number = number;
   }
 
-  public Long getExpireTime() {
-    return expireTime;
+  public Long getExpiredTime() {
+    return expiredTime;
   }
 
-  public void setExpireTime(Long expireTime) {
-    this.expireTime = expireTime;
+  public void setExpiredTime(Long expireTime) {
+    this.expiredTime = expireTime;
   }
 }

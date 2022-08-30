@@ -1,6 +1,6 @@
 package com.reactnativegysdk;
 
-import android.content.IntentFilter;
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -21,15 +21,15 @@ import com.g.gysdk.GYManager;
 import com.g.gysdk.GYResponse;
 import com.g.gysdk.GyCallBack;
 import com.g.gysdk.cta.ELoginThemeConfig;
+import com.reactnativegysdk.model.AuthExceptionMessage;
 import com.reactnativegysdk.model.AuthCheckMessage;
 import com.reactnativegysdk.model.AuthFailureMessage;
 import com.reactnativegysdk.model.AuthSuccessMessage;
 
-import org.json.JSONException;
-
 @ReactModule(name = GysdkModule.NAME)
 public class GysdkModule extends ReactContextBaseJavaModule {
   public static final String NAME = "Gysdk";
+  private final String TAG = "GYSDK";
 
   public GysdkModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -43,26 +43,27 @@ public class GysdkModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void init(String appId, Promise promise) {
-    if (GYReceiver.gyuid != null) {
-      WritableMap map = Arguments.createMap();
-      if (GYReceiver.initSuccess) {
-        map.putInt("code", GYReceiver.initSuccess ? 200 : -1);
-        map.putString("message", GYReceiver.initSuccess ? "初始化成功" : "初始化失败");
-      } else {
-        map.putInt("code", GYReceiver.code);
-        map.putString("message", GYReceiver.message);
+    Context context = getReactApplicationContext();
+    WritableMap map = Arguments.createMap();
+    GYManager.getInstance().init(context, new GyCallBack() {
+      @Override
+      public void onSuccess(GYResponse response) {
+        Log.d(TAG, "初始化成功 response:" + response);
+        map.putInt("code", response.getCode());
+        map.putString("message", "初始化成功 response:" + response.getMsg());
+        map.putString("gyuid", response.getGyuid());
+        promise.resolve(map);
       }
-      map.putBoolean("success", GYReceiver.initSuccess);
-      map.putString("gyuid", GYReceiver.gyuid);
-      promise.resolve(map);
-      return;
-    }
-    ReactApplicationContext content = getReactApplicationContext();
-    GYReceiver gyReceiver = new GYReceiver(promise);
-    IntentFilter filter = new IntentFilter("com.getui.gy.action." + appId);
-    String permission = getReactApplicationContext().getPackageName() + ".permission.GYRECEIVER";
-    content.registerReceiver(gyReceiver, filter, permission, null);
-    GYManager.getInstance().init(content);
+
+      @Override
+      public void onFailed(GYResponse response) {
+        Log.e(TAG, "初始化失败 response:" + response);
+        map.putInt("code", response.getCode());
+        map.putString("message", "初始化失败 response:" +  response.getMsg());
+        map.putString("gyuid", response.getGyuid());
+        promise.resolve(map);
+      }
+    });
   }
 
   @ReactMethod
@@ -78,9 +79,11 @@ public class GysdkModule extends ReactContextBaseJavaModule {
     GYManager.getInstance().ePreLogin(timeout, new GyCallBack() {
       @Override
       public void onSuccess(GYResponse response) {
+        Log.d(TAG + ":预登录成功:", "response:" + response);
+
         AuthCheckMessage message = JSON.parseObject(response.getMsg(), AuthCheckMessage.class);
         result.putString("msg", message.getMsg());
-        result.putDouble("expireTime", message.getExpireTime());
+        result.putDouble("expireTime", message.getExpiredTime());
         result.putString("operatorType", message.getOperatorType());
         result.putString("processID", message.getProcess_id());
         result.putString("number", message.getNumber());
@@ -88,11 +91,12 @@ public class GysdkModule extends ReactContextBaseJavaModule {
         result.putInt("code", response.getCode());
         result.putBoolean("success", true);
         promise.resolve(result);
-        Log.d("=======预登录成功:", "response:" + response);
       }
 
       @Override
       public void onFailed(GYResponse response) {
+        Log.e(TAG + ":预登录失败:", "response:" + response);
+
         AuthFailureMessage message = JSON.parseObject(response.getMsg(), AuthFailureMessage.class);
         String errorData = message.getMetadata().getString("error_data");
         String errorMsg = message.getMetadata().getString("msg");
@@ -106,8 +110,6 @@ public class GysdkModule extends ReactContextBaseJavaModule {
         result.putInt("code", response.getCode());
         result.putBoolean("success", false);
         promise.resolve(result);
-
-        Log.d("=======预登录失败:", "response:" + response);
       }
     });
   }
@@ -139,7 +141,6 @@ public class GysdkModule extends ReactContextBaseJavaModule {
     String clauseUrlTwo = config.hasKey("agreements") ? config.getArray("agreements").getMap(1).getString("url") : null;
 
     builder
-      .setLogoImgPath("gt_one_login_logo")
       .setLogoOffsetX(Utils.getLeftX(logoRect, 0))
       .setLogoOffsetY(Utils.getTopY(logoRect, 125))
       .setLogoOffsetY_B(Utils.getBottomY(logoRect, 0))
@@ -182,11 +183,16 @@ public class GysdkModule extends ReactContextBaseJavaModule {
       .setReturnImgOffsetX(Utils.getLeftX(backButtonRect, 12))
       .setReturnImgWidth(Utils.getWidth(backButtonRect, 24))
       .setReturnImgHeight(Utils.getHeight(backButtonRect, 24))
-      .setReturnImgOffsetY(Utils.getTopY(backButtonRect, 0));
+      .setReturnImgOffsetY(Utils.getTopY(backButtonRect, 0))
+      .setLogoImgPath("gt_one_login_logo")
+      .setLoginImgPath("gt_one_login_btn_normal")
+      .setNavReturnImgPath("gt_one_login_left_back");
 
     GYManager.getInstance().eAccountLogin(builder.build(), new GyCallBack() {
       @Override
       public void onSuccess(GYResponse response) {
+        Log.d(TAG + ":登录成功", "response:" + response);
+
         AuthSuccessMessage message = JSON.parseObject(response.getMsg(), AuthSuccessMessage.class);
 
         result.putDouble("expiredTime", message.getData().getExpiredTime());
@@ -196,28 +202,41 @@ public class GysdkModule extends ReactContextBaseJavaModule {
         result.putBoolean("success", true);
         promise.resolve(result);
 
-        Log.d("------登录成功", "response:" + response);
-
         GYManager.getInstance().finishAuthActivity();
       }
 
       @Override
       public void onFailed(GYResponse response) {
+        Log.e(TAG + ":登录失败", "response:" + response);
+
+        if (response.getMsg().indexOf("process_id") == -1) {
+          AuthExceptionMessage message = JSON.parseObject(response.getMsg(), AuthExceptionMessage.class);
+          result.putBoolean("success", false);
+          result.putInt("code", response.getCode());
+          result.putInt("errorCode", message.getErrorCode());
+          result.putString("metadata", message.getMetadata());
+          result.putString("msg", message.getErrorDesc());
+          result.putString("operatorType", response.getOperator());
+          result.putString("gyuid", response.getGyuid());
+          promise.resolve(result);
+          GYManager.getInstance().finishAuthActivity();
+          return;
+        }
+
         AuthFailureMessage message = JSON.parseObject(response.getMsg(), AuthFailureMessage.class);
         String errorData = message.getMetadata().getString("error_data");
         String errorMsg = message.getMetadata().getString("msg");
 
+        result.putInt("code", response.getCode());
+        result.putInt("errorCode", message.getErrorCode());
+        result.putBoolean("success", false);
         result.putString("metadata", message.getMetadata().toString());
         result.putString("msg", errorData != null ? errorData : errorMsg);
         result.putString("operatorType", message.getOperatorType());
         result.putString("processID", message.getProcess_id());
-        result.putInt("errorCode", message.getErrorCode());
         result.putString("gyuid", response.getGyuid());
-        result.putInt("code", response.getCode());
-        result.putBoolean("success", false);
-        promise.resolve(result);
 
-        Log.d("------登录失败", "response:" + response);
+        promise.resolve(result);
 
         GYManager.getInstance().finishAuthActivity();
       }

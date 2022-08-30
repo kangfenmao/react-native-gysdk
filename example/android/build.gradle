@@ -35,7 +35,7 @@ allprojects {
         jcenter()
         maven { url 'https://www.jitpack.io' }
         maven {
-          url 'http://mvn.gt.getui.com/nexus/content/repositories/releases'
+          url 'https://mvn.getui.com/nexus/content/repositories/releases'
         }
     }
 }

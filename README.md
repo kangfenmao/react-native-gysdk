@@ -9,7 +9,7 @@
 ## 安装
 
 ```sh
-npm install react-native-gysdk
+npm install @kangfenmao/react-native-gysdk
 cd ios && pod install && cd ..
 ```
 
@@ -27,7 +27,7 @@ cd ios && pod install && cd ..
 
 ```gradle
 maven {
-  url 'http://mvn.gt.getui.com/nexus/content/repositories/releases'
+  url 'https://mvn.getui.com/nexus/content/repositories/releases'
 }
 ```
 ![](docs/images/android_maven.png)
@@ -107,7 +107,6 @@ login
   code: 30006
   errorCode: "-20303"
   gyuid: "412c1a6cd17f4547922788bc9a5577d636"
-  processID: "b56af2a8802a00e04430854b6f753796"
   operatorType: "CT"
   msg: "点击切换账号"
   metadata: "{"error_data":"点击切换账号"}"
