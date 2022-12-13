@@ -1,10 +1,14 @@
 package com.reactnativegysdk;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.alibaba.fastjson.JSON;
 import com.facebook.react.bridge.Arguments;
@@ -140,53 +144,53 @@ public class GysdkModule extends ReactContextBaseJavaModule {
     String clauseNameTwo = config.hasKey("agreements") ? config.getArray("agreements").getMap(1).getString("title") : null;
     String clauseUrlTwo = config.hasKey("agreements") ? config.getArray("agreements").getMap(1).getString("url") : null;
 
-    builder
-      .setLogoOffsetX(Utils.getLeftX(logoRect, 0))
-      .setLogoOffsetY(Utils.getTopY(logoRect, 125))
-      .setLogoOffsetY_B(Utils.getBottomY(logoRect, 0))
-      .setLogoWidth(Utils.getWidth(logoRect, 71))
-      .setLogoHeight(Utils.getHeight(logoRect, 71))
-      .setNumFieldOffsetX(Utils.getLeftX(phoneNumRect, 0))
-      .setNumFieldOffsetY(Utils.getTopY(phoneNumRect, 200))
-      .setNumFieldOffsetY_B(Utils.getBottomY(phoneNumRect, 0))
-      .setNumberSize(config.hasKey("phoneNumFontSize") ? config.getInt("phoneNumFontSize") : 24)
-      .setNumberColor(Utils.getColor(config, "phoneNumColor", 0xFF3D424C))
-      .setLoginButtonText(config.hasKey("authButtonTitle") ? config.getString("authButtonTitle") : "一键登录")
-      .setLoginButtonColor(Utils.getColor(config, "authButtonColor", 0xFFFFFFFF))
-      .setLogBtnOffsetX(Utils.getLeftX(authButtonRect, 0))
-      .setLogBtnOffsetY(Utils.getTopY(authButtonRect, 324))
-      .setLogBtnOffsetY_B(Utils.getBottomY(authButtonRect, 0))
-      .setLogBtnWidth(Utils.getWidth(authButtonRect, 268))
-      .setLogBtnHeight(Utils.getHeight(authButtonRect, 36))
-      .setSwitchOffsetX(Utils.getLeftX(switchButtonRect, 0))
-      .setSwitchAccOffsetY(Utils.getTopY(switchButtonRect, 249))
-      .setSwitchOffsetY_B(Utils.getBottomY(switchButtonRect, 0))
-      .setSwitchColor(Utils.getColor(config, "switchButtonColor", 0xFF3973FF))
-      .setSwitchSize(config.hasKey("switchButtonFontSize") ? config.getInt("switchButtonFontSize") : 14)
-      .setSwitchText(config.hasKey("switchButtonText") ? config.getString("switchButtonText") : "切换账号")
-      .setSloganOffsetX(Utils.getLeftX(sloganRect, 0))
-      .setSloganOffsetY(Utils.getTopY(sloganRect, 382))
-      .setSloganOffsetY_B(Utils.getBottomY(sloganRect, 0))
-      .setSloganColor(Utils.getColor(config, "sloganColor", 0xFFA8A8A8))
-      .setSloganSize(config.hasKey("sloganFontSize") ? config.getInt("sloganFontSize") : 10)
-      .setPrivacyTextView(
-        privacyClauseText.getString(0),
-        privacyClauseText.getString(1),
-        privacyClauseText.getString(2),
-        privacyClauseText.getString(3))
-      .setStatusBar(Color.WHITE, Color.WHITE, true)
-      .setAuthNavLayout(Color.WHITE, 49, true, false)
-      .setPrivacyLayoutWidth(Utils.getWidth(termsRect, 256))
-      .setPrivacyClauseText(null, null, clauseNameOne,  clauseUrlOne, clauseNameTwo, clauseUrlTwo)
-      .setStatusBar(Color.WHITE, Color.WHITE, true)
-      .setAuthNavLayout(Color.WHITE, 49, true, false)
-      .setReturnImgOffsetX(Utils.getLeftX(backButtonRect, 12))
-      .setReturnImgWidth(Utils.getWidth(backButtonRect, 24))
-      .setReturnImgHeight(Utils.getHeight(backButtonRect, 24))
-      .setReturnImgOffsetY(Utils.getTopY(backButtonRect, 0))
-      .setLogoImgPath("gt_one_login_logo")
-      .setLoginImgPath("gt_one_login_btn_normal")
-      .setNavReturnImgPath("gt_one_login_left_back");
+   builder
+     .setLogoOffsetX(Utils.getLeftX(logoRect, 0))
+     .setLogoOffsetY(Utils.getTopY(logoRect, 125))
+     .setLogoOffsetY_B(Utils.getBottomY(logoRect, 0))
+     .setLogoWidth(Utils.getWidth(logoRect, 71))
+     .setLogoHeight(Utils.getHeight(logoRect, 71))
+     .setNumFieldOffsetX(Utils.getLeftX(phoneNumRect, 0))
+     .setNumFieldOffsetY(Utils.getTopY(phoneNumRect, 200))
+     .setNumFieldOffsetY_B(Utils.getBottomY(phoneNumRect, 0))
+     .setNumberSize(config.hasKey("phoneNumFontSize") ? config.getInt("phoneNumFontSize") : 24)
+     .setNumberColor(Utils.getColor(config, "phoneNumColor", 0xFF3D424C))
+     .setLoginButtonText(config.hasKey("authButtonTitle") ? config.getString("authButtonTitle") : "一键登录")
+     .setLoginButtonColor(Utils.getColor(config, "authButtonColor", 0xFFFFFFFF))
+     .setLogBtnOffsetX(Utils.getLeftX(authButtonRect, 0))
+     .setLogBtnOffsetY(Utils.getTopY(authButtonRect, 324))
+     .setLogBtnOffsetY_B(Utils.getBottomY(authButtonRect, 0))
+     .setLogBtnWidth(Utils.getWidth(authButtonRect, 268))
+     .setLogBtnHeight(Utils.getHeight(authButtonRect, 36))
+     .setSwitchOffsetX(Utils.getLeftX(switchButtonRect, 0))
+     .setSwitchAccOffsetY(Utils.getTopY(switchButtonRect, 249))
+     .setSwitchOffsetY_B(Utils.getBottomY(switchButtonRect, 0))
+     .setSwitchColor(Utils.getColor(config, "switchButtonColor", 0xFF3973FF))
+     .setSwitchSize(config.hasKey("switchButtonFontSize") ? config.getInt("switchButtonFontSize") : 14)
+     .setSwitchText(config.hasKey("switchButtonText") ? config.getString("switchButtonText") : "切换账号")
+     .setSloganOffsetX(Utils.getLeftX(sloganRect, 0))
+     .setSloganOffsetY(Utils.getTopY(sloganRect, 382))
+     .setSloganOffsetY_B(Utils.getBottomY(sloganRect, 0))
+     .setSloganColor(Utils.getColor(config, "sloganColor", 0xFFA8A8A8))
+     .setSloganSize(config.hasKey("sloganFontSize") ? config.getInt("sloganFontSize") : 10)
+     .setPrivacyTextView(
+       privacyClauseText.getString(0),
+       privacyClauseText.getString(1),
+       privacyClauseText.getString(2),
+       privacyClauseText.getString(3))
+     .setStatusBar(Color.WHITE, Color.WHITE, true)
+     .setAuthNavLayout(Color.WHITE, 49, true, false)
+     .setPrivacyLayoutWidth(Utils.getWidth(termsRect, 256))
+     .setPrivacyClauseText(null, null, clauseNameOne,  clauseUrlOne, clauseNameTwo, clauseUrlTwo)
+     .setStatusBar(Color.WHITE, Color.WHITE, true)
+     .setAuthNavLayout(Color.WHITE, 49, true, false)
+     .setReturnImgOffsetX(Utils.getLeftX(backButtonRect, 12))
+     .setReturnImgWidth(Utils.getWidth(backButtonRect, 24))
+     .setReturnImgHeight(Utils.getHeight(backButtonRect, 24))
+     .setReturnImgOffsetY(Utils.getTopY(backButtonRect, 0))
+     .setLogoImgPath("gt_one_login_logo")
+     .setLoginImgPath("gt_one_login_btn_normal")
+     .setNavReturnImgPath("gt_one_login_left_back");
 
     GYManager.getInstance().eAccountLogin(builder.build(), new GyCallBack() {
       @Override
