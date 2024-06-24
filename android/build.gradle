@@ -18,8 +18,8 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-    compileSdkVersion safeExtGet('Gysdk_compileSdkVersion', 29)
-    buildToolsVersion safeExtGet('Gysdk_buildToolsVersion', '29.0.2')
+    compileSdkVersion safeExtGet('compileSdkVersion', 34)
+    buildToolsVersion safeExtGet('buildToolsVersion', '34.0.0')
     defaultConfig {
         minSdkVersion safeExtGet('Gysdk_minSdkVersion', 16)
         targetSdkVersion safeExtGet('Gysdk_targetSdkVersion', 29)
@@ -54,7 +54,7 @@ repositories {
 dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.getui:gysdk:3.1.0.0'
-    implementation 'com.getui:gtc:3.1.11.0'
+    implementation 'com.getui:gysdk:3.1.7.0'
+    implementation 'com.getui:gtc:3.2.16.0'
     implementation 'com.alibaba:fastjson:1.1.72.android'
 }
