@@ -14,19 +14,21 @@ RCT_REMAP_METHOD(init,
                  :(nonnull NSString*)appId
                  :(RCTPromiseResolveBlock)resolve
                  :(RCTPromiseRejectBlock)reject) {
-    [GeYanSdk startWithAppId:appId withCallback:^(BOOL isSuccess, NSError *error, NSString *gyUid) {
-        if (!isSuccess) {
-            NSLog(@"Failure %@", error);
-        }
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [GeYanSdk startWithAppId:appId withCallback:^(BOOL isSuccess, NSError *error, NSString *gyUid) {
+            if (!isSuccess) {
+                NSLog(@"Failure %@", error);
+            }
 
-        self->gyuid = gyUid;
+            self->gyuid = gyUid;
 
-        NSDictionary *result = isSuccess
-        ? [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @200, @"code", gyUid, @"gyuid", @"初始化成功", @"message", nil]
-        : [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @(error.code), @"code", gyUid, @"gyuid", error.localizedDescription,@"message", nil];
+            NSDictionary *result = isSuccess
+            ? [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @200, @"code", gyUid, @"gyuid", @"初始化成功", @"message", nil]
+            : [NSDictionary dictionaryWithObjectsAndKeys:@(isSuccess), @"success", @(error.code), @"code", gyUid, @"gyuid", error.localizedDescription,@"message", nil];
 
-        resolve(result);
-    }];
+            resolve(result);
+        }];
+    });
 }
 
 RCT_REMAP_METHOD(debug, debug:(BOOL)debug) {
